@@ -23,10 +23,12 @@ class node{
 
 
 class linkedlist{
-	node *head;
-	node *tail;	
+		
 	
 	public:
+		node *head;
+		node *tail;
+	
 		linkedlist(){
 			head =NULL;
 			tail=NULL;
@@ -116,61 +118,95 @@ class linkedlist{
 		}
 		
 		
-		
-		linkedlist& MergeSort(){
-			//since we know it is 8 nodes only, we can assume pivot at 4
-			//0	 1	2  3     4 5  6  7
-			//3 10 23 54     1 5 25 75
-			node*n1= new node();
-			node*n2= new node();
-			node*temp=new node();
+		void length(){
+			node *n=new node();
+			n=head;
+			int count=1;
 			
-			n1=head;	//n1 will be for first 4 values
-			n2=head;	//n2 will be for last 4 values
-			temp=head;
-			
-			int count=0;
-			
-			while(count!=4){
+			while(n!=NULL){
 				count++;
-				n2=n2->link;
+				n=n->link;
 			}
+			
+			cout<<"length: "<<count;
+		}
 		
-
-
-			linkedlist newlist;
-			int max=0;
-			while(temp!=NULL){
-				if(temp->data>max){
-					max=temp->data;
-				}
-				temp=temp->link;
+		
+		
+		node* MergeSortedList(node *lst1, node *lst2){
+			node *result;
+			
+			//base case
+			if(lst1==NULL){
+				return lst2;
+			}
+			else if(lst2==NULL){
+				return lst1;
 			}
 			
-			int c =0;
 			
-			for(int i=0;i<8-1;i++){
-				
-				if(n1->data>n2->data){
-					newlist.insert(n2->data);
-					n2=n2->link;
-					
-				}
-				else{
-					newlist.insert(n1->data);
-					n1=n1->link;
-					
-				}
-							
+			//recursively merging two lists
+			
+			if(lst1->data <= lst2->data){
+				result=lst1;
+				result->link = MergeSortedList(lst1->link,lst2);
+			}
+			else{
+				result=lst2;
+				result->link = MergeSortedList(lst1, lst2->link);
 			}
 			
-			newlist.insert(max); //this is little juggar beacause were not using recursion so last value is not being stored (which should be max) so i put max on last index or last node by myself
-			
-			return newlist;
+			return result;
 			
 		}
+		
+		
+		//func for splitting till we reach 1 element
+		
+		void SplitList(node *source, node** front, node** back){
+			node *ptr1=new node();
+			node *ptr2=new node();
+			
+			ptr2=source;
+			ptr1=source->link;
+			
+			while(ptr1!=NULL){
+				ptr1=ptr1->link;
+				
+				if(ptr1!=NULL){
+					ptr2=ptr2->link;
+					ptr1=ptr1->link;
+				}
+			}
+			
+			*front=source;
+			*back=ptr2->link;
+			ptr2->link=NULL;
+		}
 	
+		
+		void MergeSort(node** thead){
+			
+			head=*thead;
+			node* ptr1;
+			node* ptr2;
+			
+			//base case
+			if(head==NULL || head->link==NULL){
+				return;
+			}
+			
+			SplitList(head, &ptr1, &ptr2);
+			
+			//recursively sorting lists
+			MergeSort(&ptr1);
+			MergeSort(&ptr2);
+			
+			*thead=MergeSortedList(ptr1,ptr2);
+		}
 };
+
+
 
 
 
@@ -178,17 +214,23 @@ int main(){
 	
 	linkedlist list;
 	
-		list.insert(3);
-		list.insert(10);
-		list.insert(23);
-		list.insert(54);
-		list.insert(1);
-		list.insert(5);
-		list.insert(25);
-		list.insert(75);
+	//2, 3, 8, 9, 10, 20, 54, 75
 		
-		list=list.MergeSort(); //if we did merge sort inside main then we wouldnt have the need to put list=list.mergeSort() we can just sort ourselves
+		list.insert(10);
+		list.insert(3);
+		list.insert(2);
+		list.insert(54);
+		list.insert(8);
+		list.insert(75);
+		list.insert(20);
+		list.insert(9);
+		
+		//list.length();
+		//list.display();
+        
+        list.MergeSort(&list.head);
         list.display();
+        
         
         
 }
