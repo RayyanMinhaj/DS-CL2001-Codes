@@ -1,0 +1,146 @@
+#include<iostream>
+using namespace std;
+
+class node{
+	public:
+	int data;
+	node* next;
+	node* prev;
+	
+	public:
+		node(){
+			data=0;
+			next=NULL;
+			prev=NULL;
+		}
+		
+		node(int data){
+			this->data=data;
+			next=NULL;
+			prev=NULL;
+		}
+};
+
+class doubly_list{
+	node* head;
+	
+	public:
+		doubly_list(){
+			head=NULL;
+		}
+		
+		
+		void insert(int x){
+			if(head==NULL){
+				node *temp=new node(x);
+				head=temp;
+				return;
+			}
+			
+			node *temp=new node();
+			temp=head;
+			
+			while(temp->next!=NULL){
+				temp=temp->next;
+			}
+			
+			node *n=new node(x);
+			temp->next=n;
+			n->next=NULL;
+			n->prev=temp;
+			
+		}
+		
+		void insert_first(int x){
+			node *first=new node(x);
+			first->prev=NULL;
+			
+			node *temp;
+			temp=head;
+			
+			first->next=temp;
+			head=first;
+			
+			
+		}
+		
+		void display(){
+			node *temp=new node();
+			temp=head;
+			while(temp!=NULL){
+				cout<<temp->data<<" ";
+				temp=temp->next;
+			}
+		}
+		
+		void insert_anypos(int x, int pos){
+			if(pos==0){
+				this->insert_first(x);
+				return;
+			}
+			int count=0;
+			node *temp=new node();
+			temp=head;
+			
+			while(count!=pos){
+				count++;
+				temp=temp->next;
+			}
+			
+			node *n=new node(x);
+			
+			n->next=temp->next;
+			n->prev=temp;
+			
+			temp->next=n;
+			
+		}
+		
+		void del_any(int pos){
+			if(pos==0){
+				node *temp=new node();
+				temp=head;
+				
+				head=temp->next;
+				return;
+			}
+			
+			node *temp=new node();
+			temp=head;
+			
+			
+			int count=0;
+			while(count!=pos){
+				count++;
+				temp=temp->next;
+			}
+			
+			temp->prev->next=temp->next;
+			
+		}
+};
+
+int main(){
+	
+	doubly_list list;
+	
+	//(i) insert at end
+	list.insert(5);
+	list.insert(6);
+	list.insert(7);
+	list.insert(7);	
+	
+	//(ii) insert first 
+	list.insert_first(9);
+	list.insert_first(11);
+	
+	//(iii) insert any pos
+	list.insert_anypos(24,2);
+	
+	//(iv) delete any pos
+	list.del_any(0);
+	
+	//(v) display Doubly LL
+	list.display();
+	
+}

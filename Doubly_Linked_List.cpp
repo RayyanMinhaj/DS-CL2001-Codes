@@ -125,6 +125,7 @@ int main(){
     list.display();
     list.del_node(2);
     list.display();
+    
 }
 
 
